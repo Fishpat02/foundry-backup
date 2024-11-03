@@ -7,19 +7,19 @@ if [[ -z "$folderpath" ]] || [[ ! -d $folderpath ]]; then
   exit 1
 fi
 
-foldername="$(basename $folderpath)"
+foldername=$(basename "$folderpath")
 
 if [[ -r "backups/$foldername.tar.gz" && -w "backups/$foldername.tar.gz" ]]; then
   gunzip -v "backups/$foldername.tar.gz"
 fi
 
 if [[ -r "backups/$foldername.tar" ]]; then
-  tar -C foundryuserdata -df "backups/$foldername.tar" $foldername 1>/dev/null 2>&1
+  tar -C foundryuserdata -df "backups/$foldername.tar" "$foldername" 1>/dev/null 2>&1
 fi
 
 if [[ $? -eq 1 ]]; then
   rm "backups/$foldername.tar" -v
-  tar -C foundryuserdata -cavf "backups/$foldername.tar.gz" $foldername --totals
+  tar -C foundryuserdata -cavf "backups/$foldername.tar.gz" "$foldername" --totals
 else
   gzip "backups/$foldername.tar" -v
 fi
