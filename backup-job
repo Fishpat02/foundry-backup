@@ -1,0 +1,5 @@
+#!/bin/bash
+
+ls -d foundryuserdata/* | xargs -i ./backup {}
+
+rclone copy -u -v -M --transfers 10 --include *.tar.gz ./backups onedrive:/FoundryVTT
