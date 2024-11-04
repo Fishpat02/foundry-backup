@@ -1,6 +1,8 @@
 #!/bin/bash
 
 folderpath="$1"
+foundrydir=/home/foundry/foundryuserdata
+backupdir=/home/foundry/backups
 
 if [[ -z "$folderpath" ]] || [[ ! -d $folderpath ]]; then
   echo "Please provide folder to compare"
@@ -8,18 +10,19 @@ if [[ -z "$folderpath" ]] || [[ ! -d $folderpath ]]; then
 fi
 
 foldername=$(basename "$folderpath")
+backupfoldername="$backupdir/$foldername"
 
-if [[ -r "backups/$foldername.tar.gz" && -w "backups/$foldername.tar.gz" ]]; then
-  gunzip -v "backups/$foldername.tar.gz"
+if [[ -r "$backupfoldername.tar.gz" && -w "$backupfoldername.tar.gz" ]]; then
+  gunzip -v "$backupfoldername.tar.gz"
 fi
 
-if [[ -r "backups/$foldername.tar" ]]; then
-  tar -C foundryuserdata -df "backups/$foldername.tar" "$foldername" 1>/dev/null 2>&1
+if [[ -r "$backupfoldername.tar" ]]; then
+  tar -C $foundrydir -df "$backupfoldername.tar" "$foldername" 1>/dev/null 2>&1
 fi
 
 if [[ $? -eq 1 ]]; then
-  rm "backups/$foldername.tar" -v
-  tar -C foundryuserdata -cavf "backups/$foldername.tar.gz" "$foldername" --totals
+  rm "$backupfoldername.tar" -v
+  tar -C $foundrydir -cavf "$backupfoldername.tar.gz" "$foldername" --totals
 else
-  gzip "backups/$foldername.tar" -v
+  gzip "$backupfoldername.tar" -v
 fi

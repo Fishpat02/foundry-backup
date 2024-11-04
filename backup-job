@@ -1,5 +1,7 @@
 #!/bin/bash
 
-find foundryuserdata/* -0 -type d -depth 0 | xargs -I{} ./backup {}
+backupdir=/home/foundry/foundryuserdata
 
-rclone copy -u -v -M --transfers 10 --include "*.tar.gz" ./backups onedrive:/FoundryVTT
+find $backupdir -mindepth 1 -maxdepth 1 -print0 -type d | xargs -r -0 -I{} /home/foundry/backup {}
+
+rclone copy -u -v -M --transfers 10 --include "*.tar.gz" /home/foundry/backups onedrive:/FoundryVTT
