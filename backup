@@ -13,16 +13,18 @@ foldername=$(basename "$folderpath")
 backupfoldername="$backupdir/$foldername"
 
 if [[ -r "$backupfoldername.tar.gz" && -w "$backupfoldername.tar.gz" ]]; then
-  gunzip -v "$backupfoldername.tar.gz"
+  gzip -d -v "$backupfoldername.tar.gz"
 fi
 
 if [[ -r "$backupfoldername.tar" ]]; then
   tar -C $foundrydir -df "$backupfoldername.tar" "$foldername" 1>/dev/null 2>&1
+else
+  tar -C $foundrydir -cvf "$backupfoldername.tar" "$foldername" --totals
 fi
 
 if [[ $? -eq 1 ]]; then
-  rm "$backupfoldername.tar" -v
-  tar -C $foundrydir -cavf "$backupfoldername.tar.gz" "$foldername" --totals
+  rm -v "$backupfoldername.tar"
+  tar -C $foundrydir -cvf "$backupfoldername.tar" "$foldername" --totals | gzip -n --rsyncable -v
 else
-  gzip "$backupfoldername.tar" -v
+  gzip --rsyncable -v "$backupfoldername.tar"
 fi
