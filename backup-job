@@ -4,4 +4,10 @@ backupdir=/home/foundry/foundryuserdata
 
 find $backupdir -mindepth 1 -maxdepth 1 -print0 -type d | xargs -r -0 -I{} /home/foundry/backup {}
 
-rclone copy -u -v -M --transfers 10 --include "*.tar.gz" /home/foundry/backups onedrive:/FoundryVTT
+rclone copy -u -v -M \
+  --check-first \
+  --transfers 10 \
+  --stats 0 \
+  --stats-one-line-date \
+  --include "*.tar.?z" \
+  /home/foundry/backups onedrive:/FoundryVTT
